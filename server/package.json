@@ -1,0 +1,29 @@
+{
+  "name": "nodejs-bulk-mail-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build-client": "cd client && npm install && npm run build",
+    "build-server": "pkg . --targets node18-win-x64 --output ./build/BulkMail.exe",
+    "build": "npm run build-client && npm run build-server"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "googleapis": "^140.0.1",
+    "mongoose": "^8.5.2",
+    "nodemailer": "^6.9.14"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  },
+  "pkg": {
+    "assets": [
+      "public/build/**/*"
+    ]
+  }
+}
