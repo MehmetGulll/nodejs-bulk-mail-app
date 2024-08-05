@@ -6,6 +6,7 @@ const path = require("path");
 const { exec } = require("child_process");
 const emailRoutes = require("./routes/emailRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const fileRoutes = require('./routes/fileRoutes');
 
 const app = express();
 const port = 5000;
@@ -13,6 +14,8 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(categoryRoutes);
 app.use(emailRoutes);
+app.use(fileRoutes);
+
 
 app.use(express.static(path.join(__dirname, "public", "build")));
 app.get("*", (req, res) => {

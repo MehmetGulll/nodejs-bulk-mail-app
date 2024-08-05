@@ -19,7 +19,6 @@ const sendEmail = async (req, res) => {
 
   try {
     const emails = await Email.find({ name: selectedCategory });
-    console.log("Fetched emails:", emails);
 
     if (!emails.length) {
       console.log(`No emails found for category ${selectedCategory}.`);
@@ -32,23 +31,45 @@ const sendEmail = async (req, res) => {
       const mailOptions = {
         from: "destekbilcom@gmail.com",
         to: emailDoc.email,
-        subject: "Toplu Mail Başlığı",
+        subject: "Bilcom Bilgisayar",
         html: `
           <html>
             <body>
-              <div style="text-align: center;">
-                <img src="cid:image1" style="display: block; margin: 0 auto;">
-              </div>
-              <div style="text-align: center; margin-top: 20px;">
-                <a href="https://www.example1.com" style="text-decoration: none; display: inline-block; padding: 10px 20px; margin: 5px; border-radius: 5px; background-color: #007BFF; color: white;">Button 1</a>
-                <a href="https://www.example2.com" style="text-decoration: none; display: inline-block; padding: 10px 20px; margin: 5px; border-radius: 5px; background-color: #28A745; color: white;">Button 2</a>
-                <a href="https://www.example3.com" style="text-decoration: none; display: inline-block; padding: 10px 20px; margin: 5px; border-radius: 5px; background-color: #DC3545; color: white;">Button 3</a>
-              </div>
-              <div style="text-align: center; margin-top: 20px; background-color: #333; color: white; padding: 20px;">
-                <p>Copyright © 2024 Bilcom Bilgisayar bütün hakları saklıdır.</p>
-                <p>Bu e-postaları alma şeklinizi değiştirmek ister misiniz?</p>
-                <p>Tercihlerinizi güncelleyebilir veya <a href="https://unsubscribe.example.com" style="color: orange;">bu abone listesinden çıkabilirsiniz</a>.</p>
-              </div>
+              <table role="presentation" style="width: 100%; background-color: #333;">
+                <tr>
+                  <td style="text-align: center;">
+                    <img src="cid:image1" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
+                  </td>
+                </tr>
+                <tr>
+                  <td style="text-align: center;">
+                    <table style="margin: 0 auto; width: 80%; border-spacing: 10px;">
+                      <tr>
+                        <td style="background-color: #333; text-align: center; width: 33%;">
+                          <a href="https://www.bilcom.com.tr/" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; background-color: #333; color: white;">www.bilcom.com.tr</a>
+                        </td>
+                        <td style="background-color: #333; text-align: center; width: 33%;">
+                          <a href="https://www.instagram.com/bilcomizmir/" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; background-color: #333; color: white;">bilcomizmir</a>
+                        </td>
+                        <td style="background-color: #333; text-align: center; width: 33%;">
+                          <a href="#" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; background-color: #333; color: white;">+90 (0232) 446 55 76</a>
+                        </td>
+                      </tr>
+                    </table>
+                 </td>
+                </tr>
+              </table>
+              <table role="presentation" style="width: 100%; background-color: #333; margin-top: 20px;">
+                <tr>
+                  <td style="text-align: center; padding: 20px;">
+                    <div style="color: white;">
+                      <p>Copyright © 2024 Bilcom Bilgisayar bütün hakları saklıdır.</p>
+                      <p>Bu e-postaları alma şeklinizi değiştirmek ister misiniz?</p>
+                      <p>Tercihlerinizi güncelleyebilir veya <a href="https://bilcom.com.tr/unsucscribe.html" style="color: orange;">bu abone listesinden çıkabilirsiniz</a>.</p>
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </body>
           </html>
         `,
@@ -66,11 +87,9 @@ const sendEmail = async (req, res) => {
         console.log(`Mail sent to ${emailDoc.email}`);
       } catch (error) {
         console.log(`Failed to send email to ${emailDoc.email}: `, error);
-        return res
-          .status(500)
-          .send({
-            error: `Failed to send email to ${emailDoc.email}: ${error.message}`,
-          });
+        return res.status(500).send({
+          error: `Failed to send email to ${emailDoc.email}: ${error.message}`,
+        });
       }
     }
 

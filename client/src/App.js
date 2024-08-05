@@ -7,6 +7,10 @@ function App() {
   const [newCategory, setNewCategory] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newSelectedName, setNewSelectedName] = useState("");
+  const [file, setFile] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -33,34 +37,76 @@ function App() {
   };
 
   const handleAddCategory = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/addCategory", {
-        name: newCategory,
-      });
-      setCategories([...categories, response.data]);
-      setNewCategory("");
-      alert("Kategori eklendi");
-    } catch (error) {
-      console.log("Error", error);
-      alert("Kategori eklenirken hata oluştu");
+    if (!newCategory.trim()) {
+      alert("Kategori adı boş bırakılamaz!");
+      return;
+    } else {
+      try {
+        const response = await axios.post("http://localhost:5000/addCategory", {
+          name: newCategory,
+        });
+        setCategories([...categories, response.data]);
+        setNewCategory("");
+        alert("Kategori eklendi");
+      } catch (error) {
+        console.log("Error", error);
+        alert("Kategori eklenirken hata oluştu");
+      }
     }
   };
   const handleAddEmail = async () => {
-    try {
-      if (!newEmail || !newSelectedName) {
-        alert("E-posta ve kategori adı gereklidir.");
-        return;
+    if (!newEmail.trim()) {
+      alert("Email boş bırakılamaz!");
+      return;
+    } else {
+      try {
+        if (!newEmail || !newSelectedName) {
+          alert("E-posta ve kategori adı gereklidir.");
+          return;
+        }
+        const response = await axios.post("http://localhost:5000/addEmail", {
+          email: newEmail,
+          name: newSelectedName,
+        });
+        alert("Email başarıyla eklendi!");
+        setNewEmail("");
+        setNewSelectedName("");
+      } catch (error) {
+        console.error("Email eklerken hata oluştu:", error);
+        alert("Email eklerken hata oluştu");
       }
-      const response = await axios.post("http://localhost:5000/addEmail", {
-        email: newEmail,
-        name: newSelectedName,
-      });
-      alert("Email başarıyla eklendi!");
-      setNewEmail("");
-      setNewSelectedName("");
+    }
+  };
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) {
+      alert("Lütfen bir dosya seçin.");
+      return;
+    }
+
+    setFile(selectedFile);
+    await uploadFile(selectedFile);
+  };
+
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/uploadFile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("Dosya başarıyla yüklendi!");
+      console.log(response.data);
     } catch (error) {
-      console.error("Email eklerken hata oluştu:", error);
-      alert("Email eklerken hata oluştu");
+      console.error("Dosya yüklenirken hata oluştu:", error);
+      alert("Dosya yüklenirken bir hata oluştu.");
     }
   };
 
@@ -85,6 +131,10 @@ function App() {
                   </option>
                 ))}
             </select>
+          </div>
+          <div className="flex flex-col mt-2">
+            <input type="file" onChange={handleFileChange} accept="image/*" />
+
           </div>
           <div>
             <button
