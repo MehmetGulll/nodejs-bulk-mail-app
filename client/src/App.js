@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from 'sweetalert2'
 
 function App() {
   const [selectedName, setSelectedName] = useState("");
@@ -29,16 +30,28 @@ function App() {
       const response = await axios.post("http://localhost:5000/sendEmail", {
         name: selectedName,
       });
-      alert("Email sent successfully!");
+      Swal.fire({
+        title:"Email Sending",
+        text:"Email sent successfuly!",
+        icon:'success'
+      })
     } catch (error) {
       console.log("Error", error);
-      alert("Email sent failed", error);
+      Swal.fire({
+        title:"Email Sending",
+        text:"Email sent failed",
+        icon:'error'
+      })
     }
   };
 
   const handleAddCategory = async () => {
     if (!newCategory.trim()) {
-      alert("Kategori adı boş bırakılamaz!");
+      Swal.fire({
+        title:'Oopss!',
+        text:"Kategori kısmı boş olamaz!",
+        icon:'error'
+      })
       return;
     } else {
       try {
@@ -47,40 +60,68 @@ function App() {
         });
         setCategories([...categories, response.data]);
         setNewCategory("");
-        alert("Kategori eklendi");
+        Swal.fire({
+          title:'Kategori Ekleme',
+          text:"Kategori Başarıyla Eklendi!",
+          icon:'success'
+        })
       } catch (error) {
         console.log("Error", error);
-        alert("Kategori eklenirken hata oluştu");
+        Swal.fire({
+          title:'Oopss!',
+          text:"Kategori eklerken bir hata oluştu!",
+          icon:'error'
+        })
       }
     }
   };
   const handleAddEmail = async () => {
     if (!newEmail.trim()) {
-      alert("Email boş bırakılamaz!");
+      Swal.fire({
+        title:'Oopss!',
+        text:"Email kısmı boş kalamaz!",
+        icon:'error'
+      })
       return;
     } else {
       try {
         if (!newEmail || !newSelectedName) {
-          alert("E-posta ve kategori adı gereklidir.");
+          Swal.fire({
+            title:'Oopss!',
+            text:"Email ve kategori adı gereklidir!",
+            icon:'error'
+          })
           return;
         }
         const response = await axios.post("http://localhost:5000/addEmail", {
           email: newEmail,
           name: newSelectedName,
         });
-        alert("Email başarıyla eklendi!");
+        Swal.fire({
+          title:'Email Ekleme',
+          text:"Email Başarıyla Eklendi!",
+          icon:'success'
+        })
         setNewEmail("");
         setNewSelectedName("");
       } catch (error) {
         console.error("Email eklerken hata oluştu:", error);
-        alert("Email eklerken hata oluştu");
+        Swal.fire({
+          title:'Oopss!',
+          text:"Email eklenirken bir hata oluştu!",
+          icon:'error'
+        })
       }
     }
   };
   const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     if (!selectedFile) {
-      alert("Lütfen bir dosya seçin.");
+      Swal.fire({
+        title:'Oopss!',
+        text:"Lütfen bir dosya seçiniz!",
+        icon:'error'
+      })
       return;
     }
 
@@ -102,11 +143,19 @@ function App() {
           },
         }
       );
-      alert("Dosya başarıyla yüklendi!");
+      Swal.fire({
+        title:'Dosya Ekleme',
+        text:"Dosya Başarıyla Eklendi!",
+        icon:'success'
+      })
       console.log(response.data);
     } catch (error) {
       console.error("Dosya yüklenirken hata oluştu:", error);
-      alert("Dosya yüklenirken bir hata oluştu.");
+      Swal.fire({
+        title:'Oopss!',
+        text:"Dosya yüklenirken bir hata oluştu!",
+        icon:'error'
+      })
     }
   };
 
