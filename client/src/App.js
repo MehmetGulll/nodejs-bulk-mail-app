@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import Header from "./components/Header";
 import axios from "axios";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 function App() {
   const [selectedName, setSelectedName] = useState("");
@@ -9,9 +10,6 @@ function App() {
   const [newEmail, setNewEmail] = useState("");
   const [newSelectedName, setNewSelectedName] = useState("");
   const [file, setFile] = useState(null);
-  const [progress, setProgress] = useState(0);
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -31,27 +29,27 @@ function App() {
         name: selectedName,
       });
       Swal.fire({
-        title:"Email Sending",
-        text:"Email sent successfuly!",
-        icon:'success'
-      })
+        title: "Email Sending",
+        text: "Email sent successfuly!",
+        icon: "success",
+      });
     } catch (error) {
       console.log("Error", error);
       Swal.fire({
-        title:"Email Sending",
-        text:"Email sent failed",
-        icon:'error'
-      })
+        title: "Email Sending",
+        text: "Email sent failed",
+        icon: "error",
+      });
     }
   };
 
   const handleAddCategory = async () => {
     if (!newCategory.trim()) {
       Swal.fire({
-        title:'Oopss!',
-        text:"Kategori kısmı boş olamaz!",
-        icon:'error'
-      })
+        title: "Oopss!",
+        text: "Kategori kısmı boş olamaz!",
+        icon: "error",
+      });
       return;
     } else {
       try {
@@ -61,36 +59,36 @@ function App() {
         setCategories([...categories, response.data]);
         setNewCategory("");
         Swal.fire({
-          title:'Kategori Ekleme',
-          text:"Kategori Başarıyla Eklendi!",
-          icon:'success'
-        })
+          title: "Kategori Ekleme",
+          text: "Kategori Başarıyla Eklendi!",
+          icon: "success",
+        });
       } catch (error) {
         console.log("Error", error);
         Swal.fire({
-          title:'Oopss!',
-          text:"Kategori eklerken bir hata oluştu!",
-          icon:'error'
-        })
+          title: "Oopss!",
+          text: "Kategori eklerken bir hata oluştu!",
+          icon: "error",
+        });
       }
     }
   };
   const handleAddEmail = async () => {
     if (!newEmail.trim()) {
       Swal.fire({
-        title:'Oopss!',
-        text:"Email kısmı boş kalamaz!",
-        icon:'error'
-      })
+        title: "Oopss!",
+        text: "Email kısmı boş kalamaz!",
+        icon: "error",
+      });
       return;
     } else {
       try {
         if (!newEmail || !newSelectedName) {
           Swal.fire({
-            title:'Oopss!',
-            text:"Email ve kategori adı gereklidir!",
-            icon:'error'
-          })
+            title: "Oopss!",
+            text: "Email ve kategori adı gereklidir!",
+            icon: "error",
+          });
           return;
         }
         const response = await axios.post("http://localhost:5000/addEmail", {
@@ -98,19 +96,19 @@ function App() {
           name: newSelectedName,
         });
         Swal.fire({
-          title:'Email Ekleme',
-          text:"Email Başarıyla Eklendi!",
-          icon:'success'
-        })
+          title: "Email Ekleme",
+          text: "Email Başarıyla Eklendi!",
+          icon: "success",
+        });
         setNewEmail("");
         setNewSelectedName("");
       } catch (error) {
         console.error("Email eklerken hata oluştu:", error);
         Swal.fire({
-          title:'Oopss!',
-          text:"Email eklenirken bir hata oluştu!",
-          icon:'error'
-        })
+          title: "Oopss!",
+          text: "Email eklenirken bir hata oluştu!",
+          icon: "error",
+        });
       }
     }
   };
@@ -118,10 +116,10 @@ function App() {
     const selectedFile = event.target.files[0];
     if (!selectedFile) {
       Swal.fire({
-        title:'Oopss!',
-        text:"Lütfen bir dosya seçiniz!",
-        icon:'error'
-      })
+        title: "Oopss!",
+        text: "Lütfen bir dosya seçiniz!",
+        icon: "error",
+      });
       return;
     }
 
@@ -144,108 +142,109 @@ function App() {
         }
       );
       Swal.fire({
-        title:'Dosya Ekleme',
-        text:"Dosya Başarıyla Eklendi!",
-        icon:'success'
-      })
+        title: "Dosya Ekleme",
+        text: "Dosya Başarıyla Eklendi!",
+        icon: "success",
+      });
       console.log(response.data);
     } catch (error) {
       console.error("Dosya yüklenirken hata oluştu:", error);
       Swal.fire({
-        title:'Oopss!',
-        text:"Dosya yüklenirken bir hata oluştu!",
-        icon:'error'
-      })
+        title: "Oopss!",
+        text: "Dosya yüklenirken bir hata oluştu!",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <div className="flex flex-col">
-      <div className="flex justify-center">
-        <h1 className="text-4xl">Bulk Mail App</h1>
-      </div>
-      <div className="flex flex-row justify-around mt-5">
-        <div className="mt-5 flex flex-col">
-          <div>Gönderilecek olan birim</div>
-          <div className="mt-2">
-            <select
-              className="border-2 border-slate-700 rounded-md px-5"
-              value={selectedName}
-              onChange={(e) => setSelectedName(e.target.value)}
-            >
-              {Array.isArray(categories) &&
-                categories.map((category) => (
-                  <option key={category._id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-          <div className="flex flex-col mt-2">
-            <input type="file" onChange={handleFileChange} accept="image/*" />
-
-          </div>
-          <div>
-            <button
-              onClick={handleSubmit}
-              className="mt-5 border-2 px-8 border-slate-700 rounded-md px-5"
-            >
-              Gönder
-            </button>
-          </div>
+    <div className="flex flex-col bg-layoutBackground">
+      <div className="max-w-6xl mx-auto w-full">
+        <div className="mt-7">
+          <Header />
         </div>
-        <div className="mt-5 flex flex-col">
-          <div>Kategori Ekleme</div>
-          <div className="mt-2">
-            <input
-              type="text"
-              placeholder="Kategori Ekle"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              className="border-2 border-slate-700 rounded-md px-5"
-            />
+        <div className="flex flex-row justify-around mt-5">
+          <div className="mt-5 flex flex-col">
+            <div>Gönderilecek olan birim</div>
+            <div className="mt-2">
+              <select
+                className="border-2 border-slate-700 rounded-md px-5"
+                value={selectedName}
+                onChange={(e) => setSelectedName(e.target.value)}
+              >
+                {Array.isArray(categories) &&
+                  categories.map((category) => (
+                    <option key={category._id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className="flex flex-col mt-2">
+              <input type="file" onChange={handleFileChange} accept="image/*" />
+            </div>
+            <div>
+              <button
+                onClick={handleSubmit}
+                className="mt-5 border-2 px-8 border-slate-700 rounded-md px-5"
+              >
+                Gönder
+              </button>
+            </div>
           </div>
-          <div className="mt-5">
-            <button
-              className="border-2 px-8 border-slate-700 rounded-md px-5"
-              onClick={handleAddCategory}
-            >
-              Kategori Ekle
-            </button>
+          <div className="mt-5 flex flex-col">
+            <div>Kategori Ekleme</div>
+            <div className="mt-2">
+              <input
+                type="text"
+                placeholder="Kategori Ekle"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="border-2 border-borderColor rounded-md px-5"
+              />
+            </div>
+            <div className="mt-5">
+              <button
+                className="border-2 px-8 border-slate-700 rounded-md px-5"
+                onClick={handleAddCategory}
+              >
+                Kategori Ekle
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="mt-2 flex flex-col">
-          <div>Mail Ekleme</div>
-          <div className="mt-2">
-            <input
-              type="text"
-              placeholder="E-mail"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              className="border-2 border-slate-700 rounded-md px-5"
-            />
-          </div>
-          <div className="mt-2">
-            <select
-              className="border-2 border-slate-700 rounded-md px-5"
-              value={selectedName}
-              onChange={(e) => setNewSelectedName(e.target.value)}
-            >
-              {Array.isArray(categories) &&
-                categories.map((category) => (
-                  <option key={category._id} value={category.name}>
-                    {category.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-          <div className="mt-5">
-            <button
-              className="border-2 px-8 border-slate-700 rounded-md px-5"
-              onClick={handleAddEmail}
-            >
-              Mail Ekle
-            </button>
+          <div className="mt-2 flex flex-col">
+            <div>Mail Ekleme</div>
+            <div className="mt-2">
+              <input
+                type="text"
+                placeholder="E-mail"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                className="border-2 border-slate-700 rounded-md px-5"
+              />
+            </div>
+            <div className="mt-2">
+              <select
+                className="border-2 border-slate-700 rounded-md px-5"
+                value={selectedName}
+                onChange={(e) => setNewSelectedName(e.target.value)}
+              >
+                {Array.isArray(categories) &&
+                  categories.map((category) => (
+                    <option key={category._id} value={category.name}>
+                      {category.name}
+                    </option>
+                  ))}
+              </select>
+            </div>
+            <div className="mt-5">
+              <button
+                className="border-2 px-8 border-slate-700 rounded-md px-5"
+                onClick={handleAddEmail}
+              >
+                Mail Ekle
+              </button>
+            </div>
           </div>
         </div>
       </div>
