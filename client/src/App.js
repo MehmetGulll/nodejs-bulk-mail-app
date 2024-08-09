@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
+import FormSection from "./components/FormSection";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -13,7 +14,7 @@ function App() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/getCategories");
+        const response = await axios.get("http://localhost:8000/getCategories");
         setCategories(response.data);
       } catch (error) {
         console.error("Kategorileri yüklerken hata oluştu:", error);
@@ -25,7 +26,7 @@ function App() {
   const handleSubmit = async () => {
     console.log(selectedName);
     try {
-      const response = await axios.post("http://localhost:5000/sendEmail", {
+      const response = await axios.post("http://localhost:8000/sendEmail", {
         name: selectedName,
       });
       Swal.fire({
@@ -53,7 +54,7 @@ function App() {
       return;
     } else {
       try {
-        const response = await axios.post("http://localhost:5000/addCategory", {
+        const response = await axios.post("http://localhost:8000/addCategory", {
           name: newCategory,
         });
         setCategories([...categories, response.data]);
@@ -91,7 +92,7 @@ function App() {
           });
           return;
         }
-        const response = await axios.post("http://localhost:5000/addEmail", {
+        const response = await axios.post("http://localhost:8000/addEmail", {
           email: newEmail,
           name: newSelectedName,
         });
@@ -133,7 +134,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/uploadFile",
+        "http://localhost:8000/uploadFile",
         formData,
         {
           headers: {
@@ -163,89 +164,34 @@ function App() {
         <div className="mt-7">
           <Header />
         </div>
-        <div className="flex flex-row justify-around mt-5">
-          <div className="mt-5 flex flex-col">
-            <div>Gönderilecek olan birim</div>
-            <div className="mt-2">
-              <select
-                className="border-2 border-slate-700 rounded-md px-5"
-                value={selectedName}
-                onChange={(e) => setSelectedName(e.target.value)}
-              >
-                {Array.isArray(categories) &&
-                  categories.map((category) => (
-                    <option key={category._id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div className="flex flex-col mt-2">
-              <input type="file" onChange={handleFileChange} accept="image/*" />
-            </div>
-            <div>
-              <button
-                onClick={handleSubmit}
-                className="mt-5 border-2 px-8 border-slate-700 rounded-md px-5"
-              >
-                Gönder
-              </button>
-            </div>
-          </div>
-          <div className="mt-5 flex flex-col">
-            <div>Kategori Ekleme</div>
-            <div className="mt-2">
-              <input
-                type="text"
-                placeholder="Kategori Ekle"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="border-2 border-borderColor rounded-md px-5"
-              />
-            </div>
-            <div className="mt-5">
-              <button
-                className="border-2 px-8 border-slate-700 rounded-md px-5"
-                onClick={handleAddCategory}
-              >
-                Kategori Ekle
-              </button>
-            </div>
-          </div>
-          <div className="mt-2 flex flex-col">
-            <div>Mail Ekleme</div>
-            <div className="mt-2">
-              <input
-                type="text"
-                placeholder="E-mail"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-                className="border-2 border-slate-700 rounded-md px-5"
-              />
-            </div>
-            <div className="mt-2">
-              <select
-                className="border-2 border-slate-700 rounded-md px-5"
-                value={selectedName}
-                onChange={(e) => setNewSelectedName(e.target.value)}
-              >
-                {Array.isArray(categories) &&
-                  categories.map((category) => (
-                    <option key={category._id} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-              </select>
-            </div>
-            <div className="mt-5">
-              <button
-                className="border-2 px-8 border-slate-700 rounded-md px-5"
-                onClick={handleAddEmail}
-              >
-                Mail Ekle
-              </button>
-            </div>
-          </div>
+        <div className="flex flex-row justify-around mt-5 bg-white justify-center p-5 rounded-lg">
+          <FormSection
+            title="Gönderilecek olan birim"
+            type="select"
+            value={selectedName}
+            onChange={(e) => setSelectedName(e.target.value)}
+            options={categories}
+            buttonText="Gönder"
+            buttonAction={handleSubmit}
+          />
+          <FormSection
+            title="Kategori Ekleme"
+            type="text"
+            placeholder="Kategori Ekle"
+            value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+            buttonText="Kategori Ekle"
+            buttonAction={handleAddCategory}
+          />
+          <FormSection
+            title="Mail Ekleme"
+            type="text"
+            placeholder="E-mail"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            buttonText="Mail Ekle"
+            buttonAction={handleAddEmail}
+          />
         </div>
       </div>
     </div>

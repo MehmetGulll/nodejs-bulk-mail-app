@@ -101,6 +101,17 @@ const sendEmail = async (req, res) => {
   }
 };
 
+
+const listEmails = async(req,res)=>{
+  try {
+    const emails = await Email.find({},'email name');
+    res.status(200).json(emails);
+  } catch (error) {
+    console.log("Error",error);
+    res.status(500).send({error:"Emails can't get"});
+  }
+}
+
 const addMail = async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -116,4 +127,4 @@ const addMail = async (req, res) => {
   }
 };
 
-module.exports = { sendEmail, addMail };
+module.exports = { sendEmail, addMail, listEmails };

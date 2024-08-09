@@ -9,7 +9,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const fileRoutes = require('./routes/fileRoutes');
 
 const app = express();
-const port = 5000;
+const port = 8000;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(categoryRoutes);
