@@ -1,6 +1,4 @@
 import React from "react";
-import Button from "./Button";
-
 
 function FormSection({
   title,
@@ -10,25 +8,27 @@ function FormSection({
   options,
   type = "text",
   buttonAction,
-  buttonText
+  buttonText,
+  infoText = "" 
 }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div>{title}</div>
       <div className="mt-2">
         {type === 'select' ? (
-          <select className="border-2 border-slate-700 rounded-md px-5" value={value} onChange={onChange}>
+          <select className="border-2 border-borderColor rounded-md px-5 w-full" value={value} onChange={onChange}>
             {options.map(option => (
               <option key={option._id} value={option.name}>{option.name}</option>
             ))}
           </select>
         ) : type === 'file' ? (
-          <input type="file" onChange={onChange} accept="image/*" className="border-2 border-slate-700 rounded-md px-5" />
+          <input type="file" onChange={onChange} accept="image/*" className="border-2 border-borderColor rounded-md px-5 w-full" />
         ) : (
-          <input type="text" placeholder={placeholder} value={value} onChange={onChange} className="border-2 border-slate-700 rounded-md px-5" />
+          <input type="text" placeholder={placeholder} value={value} onChange={onChange} className="border-2 border-borderColor rounded-md px-5 w-full" />
         )}
       </div>
-      <Button onClick={buttonAction} text={buttonText} />
+      {infoText && <div className="text-sm text-gray-600 mt-1">{infoText}</div>}
+      
     </div>
   );
 }

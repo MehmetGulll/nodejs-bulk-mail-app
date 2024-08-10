@@ -1,24 +1,39 @@
 import React from "react";
-
+import { NavLink } from "react-router-dom";
 function Header() {
   return (
     <div className="flex flex-row items-center bg-white rounded-lg p-10 justify-between">
       <div className="text-3xl font-semibold">BulkMail App</div>
       <div className="flex flex-row gap-3">
-        <div className="rounded-lg bg-[#4079ED] text-white transition-colors hover:bg-[#6993FF] cursor-pointer">
-          <div className="whitespace-nowrap text-sm font-semibold text-white transition-colors sm:text-base p-2">
+      <div className="rounded-lg bg-[#fdee98]  transition-colors hover:bg-[#bacea9] cursor-pointer">
+          <NavLink
+            to="/"
+            className={
+              "whitespace-nowrap text-sm font-semibold text-[#484b52]  transition-colors sm:text-base p-2 flex items-center"
+            }
+          >
             Ana Sayfa
-          </div>
+          </NavLink>
         </div>
-        <div className="rounded-lg bg-[#4079ED] text-white transition-colors hover:bg-[#6993FF] cursor-pointer">
-          <div className="whitespace-nowrap text-sm font-semibold text-white transition-colors sm:text-base p-2">
+        <div className="rounded-lg bg-[#fdee98]  transition-colors hover:bg-[#bacea9] cursor-pointer">
+          <NavLink
+            to="/emails"
+            className={
+              "whitespace-nowrap text-sm font-semibold text-[#484b52] transition-colors sm:text-base p-2 flex items-center"
+            }
+          >
             Mailler
-          </div>
+          </NavLink>
         </div>
-        <div className="rounded-lg bg-[#4079ED] text-white transition-colors hover:bg-[#6993FF] cursor-pointer">
-          <div className="whitespace-nowrap text-sm font-semibold text-white transition-colors sm:text-base p-2">
-            Kategoriler
-          </div>
+        <div className="rounded-lg bg-[#fdee98]  transition-colors hover:bg-[#bacea9] cursor-pointer">
+          <NavLink
+            to="/categories"
+            className={
+              "whitespace-nowrap text-sm font-semibold text-[#484b52] transition-colors sm:text-base p-2 flex items-center"
+            }
+          >
+            Birimler
+          </NavLink>
         </div>
       </div>
     </div>
