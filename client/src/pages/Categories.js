@@ -24,15 +24,15 @@ function Categories() {
         setCategories([...categories, response.data]);
         setNewCategory("");
         Swal.fire({
-          title: "Kategori Ekleme",
-          text: "Kategori Başarıyla Eklendi!",
+          title: "Birim Ekleme",
+          text: "Birim Başarıyla Eklendi!",
           icon: "success",
         });
       } catch (error) {
         console.log("Error", error);
         Swal.fire({
           title: "Oopss!",
-          text: "Kategori eklerken bir hata oluştu!",
+          text: "Birim eklerken bir hata oluştu!",
           icon: "error",
         });
       }
@@ -43,14 +43,14 @@ function Categories() {
       <div className="flex flex-col mt-5 bg-white p-5 rounded-lg">
         <div className="w-1/4">
         <FormSection
-          title="Kategori Ekleme"
+          title="Birim Ekleme"
           type="text"
-          placeholder="Kategori Ekle"
+          placeholder="Birim Ekle"
           value={newCategory}
           onChange={(e) => setNewCategory(e.target.value)}
         />
         <div className="mt-2">
-          <Button text={"Kategori Ekle"} onClick={handleAddCategory} />
+          <Button text={"Birim Ekle"} onClick={handleAddCategory} />
         </div>
         </div>
        

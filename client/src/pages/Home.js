@@ -186,14 +186,14 @@ function Home() {
 
         <div>
           <FormSection
-            title="Kategori Ekleme"
+            title="Birim Ekleme"
             type="text"
-            placeholder="Kategori Ekle"
+            placeholder="Birim Ekle"
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
           />
           <div className="mt-2">
-            <Button text={"Kategori Ekle"} onClick={handleAddCategory} />
+            <Button text={"Birim Ekle"} onClick={handleAddCategory} />
           </div>
         </div>
 
@@ -206,7 +206,7 @@ function Home() {
             onChange={(e) => setNewEmail(e.target.value)}
           />
           <FormSection
-            title="Kategori Seçimi"
+            title="Birim Seçimi"
             type="select"
             value={newSelectedName}
             onChange={(e) => setNewSelectedName(e.target.value)}

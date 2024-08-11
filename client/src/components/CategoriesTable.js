@@ -38,7 +38,7 @@ function CategoriesTable() {
     try {
       await axios.delete(`http://localhost:8000/deleteCategory/${id}`);
       setCategories(categories.filter((category) => category._id !== id));
-      showSuccessToast("Kategori başarıyla silindi!");  // Silme işlemi sonrası bildirim
+      showSuccessToast("Kategori başarıyla silindi!");  
     } catch (error) {
       console.log("Error deleting category", error);
       showErrorToast("Kategori silinirken bir hata oluştu.");
@@ -49,7 +49,7 @@ function CategoriesTable() {
     const { value: updatedCategoryName } = await Swal.fire({
       title: "Kategori düzenleme",
       input: "text",
-      inputValue: category.name,  // category.name doğru bir şekilde input'a yerleştiriliyor
+      inputValue: category.name,  
       inputAttributes: {
         autocapitalize: "off",
       },
@@ -59,8 +59,8 @@ function CategoriesTable() {
       preConfirm: async (newCategoryName) => {
         try {
           const response = await axios.put(
-            `http://localhost:8000/updateCategory/${category._id}`,  // category._id olmalı
-            { name: newCategoryName }  // Güncellenen kategori ismini gönderiyoruz
+            `http://localhost:8000/updateCategory/${category._id}`,  
+            { name: newCategoryName }  
           );
           return response.data;
         } catch (error) {
@@ -75,7 +75,7 @@ function CategoriesTable() {
     if (updatedCategoryName) {
       setCategories(
         categories.map((item) =>
-          item._id === category._id ? { ...item, name: updatedCategoryName } : item  // category.name güncelleniyor
+          item._id === category._id ? { ...item, name: updatedCategoryName } : item  
         )
       );
       showSuccessToast("Kategori başarıyla güncellendi!");
@@ -87,7 +87,7 @@ function CategoriesTable() {
       <div className="flex justify-between p-3">
         <input
           type="text"
-          placeholder="Filter by category name"
+          placeholder="Birim Ara"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           className="border p-2"
@@ -96,8 +96,8 @@ function CategoriesTable() {
       <table className="table-auto w-full">
         <thead>
           <tr className="bg-gray-200">
-            <th className="px-4 py-2">Category Name</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-4 py-2">Birim Adı</th>
+            <th className="px-4 py-2">Aksiyonlar</th>
           </tr>
         </thead>
         <tbody>
@@ -106,7 +106,7 @@ function CategoriesTable() {
               <td className="border px-4 py-2">{category.name}</td>
               <td className="border px-4 py-3 text-center ">
                 <button
-                  onClick={() => handleEdit(category)}  // category nesnesini gönderiyoruz
+                  onClick={() => handleEdit(category)}  
                   className="text-blue-500 hover:text-blue-700"
                 >
                   <FiEdit2 />
@@ -122,7 +122,7 @@ function CategoriesTable() {
           ))}
         </tbody>
       </table>
-      <ToastNotification /> {/* Toast bildirimi için */}
+      <ToastNotification /> 
     </div>
   );
 }

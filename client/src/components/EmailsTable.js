@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import Button from "./Button";
 import {
   ToastNotification,
   showSuccessToast,
   showErrorToast,
 } from "./ToastNotification"; 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable"; // `autoTable` fonksiyonunu ayrıca import ediyoruz
+import * as XLSX from "xlsx";
 
 function EmailsTable() {
   const [emails, setEmails] = useState([]);
@@ -49,6 +53,7 @@ function EmailsTable() {
       showErrorToast("Email silinirken bir hata oluştu.");
     }
   };
+
   const handleEdit = async (email) => {
     const { value: updatedEmail } = await Swal.fire({
       title: "E-posta düzenleme",
@@ -85,12 +90,42 @@ function EmailsTable() {
       showSuccessToast("Email başarıyla güncellendi!");
     }
   };
+
+  const exportPDF = () => {
+    const doc = new jsPDF();
+    autoTable(doc, { 
+      head: [["Email", "Birim"]],
+      body: filteredEmails.map((email) => [email.email, email.name]),
+    });
+    doc.save("emails.pdf");
+  };
+
+  const exportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      filteredEmails.map((email) => ({
+        Email: email.email,
+        Birim: email.name,
+      }))
+    );
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Emails");
+    XLSX.writeFile(workbook, "emails.xlsx");
+  };
+
   return (
     <div className="mt-5">
+       <div className="flex justify-end space-x-2 mb-4">
+        <div className="w-32">
+          <Button onClick={exportPDF} text="PDF İndir" />
+        </div>
+        <div className="w-32">
+          <Button onClick={exportExcel} text="Excel İndir" />
+        </div>
+      </div>
       <div className="flex justify-between p-3">
         <input
           type="text"
-          placeholder="Filter by email"
+          placeholder="E mail Ara"
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
           className="border p-2 rounded-lg"
@@ -99,7 +134,7 @@ function EmailsTable() {
           onChange={(e) => setFilterCategory(e.target.value)}
           className="border p-2 rounded-lg"
         >
-          <option value="">All Categories</option>
+          <option value="">Bütün Kategoriler</option>
           {categories.map((category) => (
             <option key={category} value={category}>
               {category}
@@ -112,7 +147,7 @@ function EmailsTable() {
           <tr className="bg-gray-200">
             <th className="px-4 py-2">Email</th>
             <th className="px-4 py-2">Birim</th>
-            <th className="px-4 py-2">Actions</th>
+            <th className="px-4 py-2">Aksiyonlar</th>
           </tr>
         </thead>
         <tbody>
