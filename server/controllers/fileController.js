@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const asyncHandler = require('../middlewares/asyncHandler');
 
 const uploadDir = path.join(__dirname, '../'); 
 const uploadFileName = 'resim1'; 
@@ -27,7 +28,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).single('image');
 
-exports.uploadFile = (req, res) => {
+exports.uploadFile = asyncHandler((req, res) => {
     upload(req, res, function(err) {
         if (err instanceof multer.MulterError) {
             return res.status(500).send("Multer hatası: " + err.message);
@@ -36,4 +37,4 @@ exports.uploadFile = (req, res) => {
         }
         res.send('Dosya başarıyla yüklendi');
     });
-};
+});
