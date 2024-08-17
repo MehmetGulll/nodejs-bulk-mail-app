@@ -12,7 +12,7 @@ function Header() {
       <div className="flex flex-row gap-3">
         <div className="rounded-lg bg-[#fdee98]  transition-colors hover:bg-[#bacea9] cursor-pointer">
           <NavLink
-            to="/"
+            to="/home"
             className={
               "whitespace-nowrap text-sm font-semibold text-[#484b52]  transition-colors sm:text-base p-2 flex items-center"
             }
