@@ -3,16 +3,48 @@ const path = require("path");
 const Email = require("../models/Email");
 const asyncHandler = require('../middlewares/asyncHandler')
 
-const smtpTransport = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "destekbilcom@gmail.com",
-    pass: "fodb adtl rucy zhoi",
-  },
+
+let smtpTransport;
+let defaultFromEmail;
+
+// const smtpTransport = nodemailer.createTransport({
+//   host: 'bilcomblog.com',
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: 'medya@bilcomblog.com',
+//     pass: 'tq7G#zyh7IB;'
+//   }
+// });
+exports.setupSMTP = asyncHandler(async (req, res) => {
+  const { host, port, user, password, fromEmail } = req.body;
+
+  smtpTransport = nodemailer.createTransport({
+    host: host,
+    port: port,
+    secure: true, 
+    auth: {
+      user: user,
+      pass: password
+    }
+  });
+
+  defaultFromEmail = fromEmail;
+
+  smtpTransport.verify(function (error, success) {
+    if (error) {
+      console.log(error);
+      return res.status(500).send({ error: "SMTP setup failed" });
+    } else {
+      console.log('SMTP settings are configured correctly.');
+      return res.send({ message: "SMTP setup successful" });
+    }
+  });
 });
 
 exports.sendEmail = asyncHandler(async (req, res) => {
   const selectedCategory = req.body.name;
+  console.log('Received name:', req.body.name);
 
   if (!selectedCategory) {
     return res.status(400).send({ error: "Category name is required." });
@@ -29,9 +61,9 @@ exports.sendEmail = asyncHandler(async (req, res) => {
 
   for (const emailDoc of emails) {
     const mailOptions = {
-      from: "destekbilcom@gmail.com",
+      from: defaultFromEmail, 
       to: emailDoc.email,
-      subject: "Bilcom Bilgisayar",
+      subject: "Toplu Mail",
       html: `
         <html>
           <body>

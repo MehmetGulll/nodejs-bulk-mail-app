@@ -2,6 +2,7 @@ const express = require('express');
 const emailController = require('../controllers/emailController');
 
 const router = express.Router();
+router.post('/setupSmtp', emailController.setupSMTP);
 router.post('/sendEmail',emailController.sendEmail);
 router.post('/addEmail', emailController.addMail);
 router.get('/getEmails',emailController.listEmails);

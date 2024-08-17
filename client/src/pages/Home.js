@@ -4,6 +4,7 @@ import EmailsTable from "../components/EmailsTable";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Button from "../components/Button";
+import { GoGear } from "react-icons/go";
 
 function Home() {
   const [selectedName, setSelectedName] = useState("");
@@ -12,6 +13,7 @@ function Home() {
   const [newEmail, setNewEmail] = useState("");
   const [newSelectedName, setNewSelectedName] = useState("");
   const [file, setFile] = useState(null);
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -25,7 +27,7 @@ function Home() {
     fetchCategories();
   }, []);
   const handleSubmit = async () => {
-    console.log(selectedName);
+    console.log("Selected Name:", selectedName);
     try {
       const response = await axios.post("http://localhost:8000/sendEmail", {
         name: selectedName,
@@ -39,7 +41,7 @@ function Home() {
       console.log("Error", error);
       Swal.fire({
         title: "Email Sending",
-        text: "Email sent failed",
+        text: "Email sent failed"+ error + "Check to your SMTP setting",
         icon: "error",
       });
     }
@@ -158,62 +160,114 @@ function Home() {
       });
     }
   };
+  const handleSMTPClick = async () => {
+    const { value: formValues } = await Swal.fire({
+      title: 'Enter SMTP Settings',
+      html:
+        '<input id="swal-input1" class="swal2-input" placeholder="Host">' +
+        '<input id="swal-input2" class="swal2-input" placeholder="Port">' +
+        '<input id="swal-input3" class="swal2-input" placeholder="User">' +
+        '<input id="swal-input4" class="swal2-input" type="password" placeholder="Password">' +
+        '<input id="swal-input5" class="swal2-input" placeholder="From Email">',
+      focusConfirm: false,
+      preConfirm: () => {
+        return {
+          host: document.getElementById('swal-input1').value,
+          port: document.getElementById('swal-input2').value,
+          user: document.getElementById('swal-input3').value,
+          password: document.getElementById('swal-input4').value,
+          fromEmail: document.getElementById('swal-input5').value
+        }
+      },
+      confirmButtonText: 'Submit',
+      showCancelButton: true,
+    });
+
+    if (formValues) {
+      try {
+        const response = await axios.post('http://localhost:8000/setupSmtp', formValues);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'SMTP settings updated successfully.',
+        });
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update SMTP settings.',
+        });
+      }
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto w-full">
-      <div className="flex flex-row justify-around mt-5 bg-white justify-center p-5 rounded-lg">
-        <div className="flex flex-col">
-          <label>Dosya Yükle</label>
-          <input
-            type="file"
-            onChange={handleFileChange}
-            className=" rounded-md  mt-2"
-          />
-        </div>
-        <div>
-          <FormSection
-            title="Gönderilecek olan birim"
-            type="select"
-            value={selectedName}
-            onChange={(e) => setSelectedName(e.target.value)}
-            options={categories}
-            buttonText="Gönder"
-            buttonAction={handleSubmit}
-          />
-          <div className="mt-2">
-            <Button text={"Gönder"} onClick={handleSubmit} />
+      <div className="flex flex-col">
+        <div className="flex flex-col bg-white mt-5  p-5 rounded-lg">
+          <div
+            className="flex flex-row items-center gap-2 cursor-pointer justify-end"
+            onClick={handleSMTPClick}
+          >
+            <GoGear fontWeight={"600"} fontSize={20} />
+            <div className="font-semibold">SMTP Settings</div>
           </div>
-        </div>
+          <div className="flex flex-row justify-around p-1">
+            <div className="flex flex-col">
+              <label>Dosya Yükle</label>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className=" rounded-md  mt-2"
+              />
+            </div>
+            <div>
+              <FormSection
+                title="Gönderilecek olan birim"
+                type="select"
+                value={selectedName}
+                onChange={(e) => setSelectedName(e.target.value)}
+                options={categories}
+                buttonText="Gönder"
+                buttonAction={handleSubmit}
+              />
+              <div className="mt-2">
+                <Button text={"Gönder"} onClick={handleSubmit} />
+              </div>
+            </div>
 
-        <div>
-          <FormSection
-            title="Birim Ekleme"
-            type="text"
-            placeholder="Birim Ekle"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-          />
-          <div className="mt-2">
-            <Button text={"Birim Ekle"} onClick={handleAddCategory} />
-          </div>
-        </div>
+            <div>
+              <FormSection
+                title="Birim Ekleme"
+                type="text"
+                placeholder="Birim Ekle"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+              <div className="mt-2">
+                <Button text={"Birim Ekle"} onClick={handleAddCategory} />
+              </div>
+            </div>
 
-        <div>
-          <FormSection
-            title="Mail Ekleme"
-            type="text"
-            placeholder="E-mail"
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-          />
-          <FormSection
-            title="Birim Seçimi"
-            type="select"
-            value={newSelectedName}
-            onChange={(e) => setNewSelectedName(e.target.value)}
-            options={categories}
-          />
-          <div className="mt-2">
-            <Button text={"Mail Ekle"} onClick={handleAddEmail} />
+            <div>
+              <FormSection
+                title="Mail Ekleme"
+                type="text"
+                placeholder="E-mail"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+              <FormSection
+                title="Birim Seçimi"
+                type="select"
+                value={newSelectedName}
+                onChange={(e) => setNewSelectedName(e.target.value)}
+                options={categories}
+              />
+              <div className="mt-2">
+                <Button text={"Mail Ekle"} onClick={handleAddEmail} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

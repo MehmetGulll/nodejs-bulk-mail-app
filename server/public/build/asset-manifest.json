@@ -1,15 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.036c08f7.css",
-    "main.js": "/static/js/main.c97d4b0f.js",
-    "static/js/453.419a5d54.chunk.js": "/static/js/453.419a5d54.chunk.js",
+    "main.css": "/static/css/main.361e2b09.css",
+    "main.js": "/static/js/main.ebc7bc1e.js",
+    "static/js/239.eab0352a.chunk.js": "/static/js/239.eab0352a.chunk.js",
+    "static/js/213.2d06e9fa.chunk.js": "/static/js/213.2d06e9fa.chunk.js",
+    "static/js/732.95fbfc31.chunk.js": "/static/js/732.95fbfc31.chunk.js",
+    "static/js/453.258b012d.chunk.js": "/static/js/453.258b012d.chunk.js",
+    "static/media/bulkMailLogo.jpg": "/static/media/bulkMailLogo.d078aaf8027c2601ed58.jpg",
     "index.html": "/index.html",
-    "main.036c08f7.css.map": "/static/css/main.036c08f7.css.map",
-    "main.c97d4b0f.js.map": "/static/js/main.c97d4b0f.js.map",
-    "453.419a5d54.chunk.js.map": "/static/js/453.419a5d54.chunk.js.map"
+    "main.361e2b09.css.map": "/static/css/main.361e2b09.css.map",
+    "main.ebc7bc1e.js.map": "/static/js/main.ebc7bc1e.js.map",
+    "239.eab0352a.chunk.js.map": "/static/js/239.eab0352a.chunk.js.map",
+    "213.2d06e9fa.chunk.js.map": "/static/js/213.2d06e9fa.chunk.js.map",
+    "732.95fbfc31.chunk.js.map": "/static/js/732.95fbfc31.chunk.js.map",
+    "453.258b012d.chunk.js.map": "/static/js/453.258b012d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.036c08f7.css",
-    "static/js/main.c97d4b0f.js"
+    "static/css/main.361e2b09.css",
+    "static/js/main.ebc7bc1e.js"
   ]
 }
