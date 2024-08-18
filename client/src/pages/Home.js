@@ -5,6 +5,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Button from "../components/Button";
 import { GoGear } from "react-icons/go";
+import { useAuth } from "../Context/AuthContext";
 
 function Home() {
   const [selectedName, setSelectedName] = useState("");
@@ -13,8 +14,10 @@ function Home() {
   const [newEmail, setNewEmail] = useState("");
   const [newSelectedName, setNewSelectedName] = useState("");
   const [file, setFile] = useState(null);
-  
+  const { token } = useAuth();
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const fetchCategories = async () => {
       try {
         const response = await axios.get("http://localhost:8000/getCategories");
@@ -29,9 +32,17 @@ function Home() {
   const handleSubmit = async () => {
     console.log("Selected Name:", selectedName);
     try {
-      const response = await axios.post("http://localhost:8000/sendEmail", {
-        name: selectedName,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/sendEmail",
+        {
+          name: selectedName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       Swal.fire({
         title: "Email Sending",
         text: "Email sent successfuly!",
@@ -41,7 +52,7 @@ function Home() {
       console.log("Error", error);
       Swal.fire({
         title: "Email Sending",
-        text: "Email sent failed"+ error + "Check to your SMTP setting",
+        text: "Email sent failed" + error + "Check to your SMTP setting",
         icon: "error",
       });
     }
@@ -57,9 +68,17 @@ function Home() {
       return;
     } else {
       try {
-        const response = await axios.post("http://localhost:8000/addCategory", {
-          name: newCategory,
-        });
+        const response = await axios.post(
+          "http://localhost:8000/addCategory",
+          {
+            name: newCategory,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setCategories([...categories, response.data]);
         setNewCategory("");
         Swal.fire({
@@ -95,10 +114,18 @@ function Home() {
           });
           return;
         }
-        const response = await axios.post("http://localhost:8000/addEmail", {
-          email: newEmail,
-          name: newSelectedName,
-        });
+        const response = await axios.post(
+          "http://localhost:8000/addEmail",
+          {
+            email: newEmail,
+            name: newSelectedName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         Swal.fire({
           title: "Email Ekleme",
           text: "Email Başarıyla Eklendi!",
@@ -162,7 +189,7 @@ function Home() {
   };
   const handleSMTPClick = async () => {
     const { value: formValues } = await Swal.fire({
-      title: 'Enter SMTP Settings',
+      title: "Enter SMTP Settings",
       html:
         '<input id="swal-input1" class="swal2-input" placeholder="Host">' +
         '<input id="swal-input2" class="swal2-input" placeholder="Port">' +
@@ -172,30 +199,37 @@ function Home() {
       focusConfirm: false,
       preConfirm: () => {
         return {
-          host: document.getElementById('swal-input1').value,
-          port: document.getElementById('swal-input2').value,
-          user: document.getElementById('swal-input3').value,
-          password: document.getElementById('swal-input4').value,
-          fromEmail: document.getElementById('swal-input5').value
-        }
+          host: document.getElementById("swal-input1").value,
+          port: document.getElementById("swal-input2").value,
+          user: document.getElementById("swal-input3").value,
+          password: document.getElementById("swal-input4").value,
+          fromEmail: document.getElementById("swal-input5").value,
+        };
       },
-      confirmButtonText: 'Submit',
+      confirmButtonText: "Submit",
       showCancelButton: true,
     });
 
     if (formValues) {
       try {
-        const response = await axios.post('http://localhost:8000/setupSmtp', formValues);
+        const response = await axios.post(
+          "http://localhost:8000/setupSmtp",
+          formValues,{
+            headers:{
+              'Authorization':`Bearer ${token}`
+            }
+          }
+        );
         Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: 'SMTP settings updated successfully.',
+          icon: "success",
+          title: "Success",
+          text: "SMTP settings updated successfully.",
         });
       } catch (error) {
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to update SMTP settings.',
+          icon: "error",
+          title: "Error",
+          text: "Failed to update SMTP settings.",
         });
       }
     }

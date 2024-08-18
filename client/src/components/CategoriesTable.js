@@ -8,16 +8,25 @@ import {
   showSuccessToast,
   showErrorToast,
 } from "./ToastNotification";
+import { useAuth } from "../Context/AuthContext";
 
 function CategoriesTable() {
   const [categories, setCategories] = useState([]);
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [filterText, setFilterText] = useState("");
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/getCategories");
+        const response = await axios.get(
+          "http://localhost:8000/getCategories",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setCategories(response.data);
         console.log(response.data);
       } catch (error) {
@@ -25,7 +34,7 @@ function CategoriesTable() {
       }
     };
     fetchCategories();
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const result = categories.filter((category) =>
@@ -36,9 +45,13 @@ function CategoriesTable() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/deleteCategory/${id}`);
+      await axios.delete(`http://localhost:8000/deleteCategory/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCategories(categories.filter((category) => category._id !== id));
-      showSuccessToast("Kategori başarıyla silindi!");  
+      showSuccessToast("Kategori başarıyla silindi!");
     } catch (error) {
       console.log("Error deleting category", error);
       showErrorToast("Kategori silinirken bir hata oluştu.");
@@ -49,7 +62,7 @@ function CategoriesTable() {
     const { value: updatedCategoryName } = await Swal.fire({
       title: "Kategori düzenleme",
       input: "text",
-      inputValue: category.name,  
+      inputValue: category.name,
       inputAttributes: {
         autocapitalize: "off",
       },
@@ -59,8 +72,13 @@ function CategoriesTable() {
       preConfirm: async (newCategoryName) => {
         try {
           const response = await axios.put(
-            `http://localhost:8000/updateCategory/${category._id}`,  
-            { name: newCategoryName }  
+            `http://localhost:8000/updateCategory/${category._id}`,
+            { name: newCategoryName },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
           return response.data;
         } catch (error) {
@@ -75,7 +93,9 @@ function CategoriesTable() {
     if (updatedCategoryName) {
       setCategories(
         categories.map((item) =>
-          item._id === category._id ? { ...item, name: updatedCategoryName } : item  
+          item._id === category._id
+            ? { ...item, name: updatedCategoryName }
+            : item
         )
       );
       showSuccessToast("Kategori başarıyla güncellendi!");
@@ -106,7 +126,7 @@ function CategoriesTable() {
               <td className="border px-4 py-2">{category.name}</td>
               <td className="border px-4 py-3 text-center ">
                 <button
-                  onClick={() => handleEdit(category)}  
+                  onClick={() => handleEdit(category)}
                   className="text-blue-500 hover:text-blue-700"
                 >
                   <FiEdit2 />
@@ -122,7 +142,7 @@ function CategoriesTable() {
           ))}
         </tbody>
       </table>
-      <ToastNotification /> 
+      <ToastNotification />
     </div>
   );
 }

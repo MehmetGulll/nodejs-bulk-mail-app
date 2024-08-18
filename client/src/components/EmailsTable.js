@@ -12,17 +12,23 @@ import {
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; 
 import * as XLSX from "xlsx";
+import { useAuth } from "../Context/AuthContext";
 
 function EmailsTable() {
   const [emails, setEmails] = useState([]);
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [filterText, setFilterText] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchEmails = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/getEmails");
+        const response = await axios.get("http://localhost:8000/getEmails", {
+          headers: {
+            'Authorization': `Bearer ${token}`  
+          }
+        });
         setEmails(response.data);
         console.log(response.data);
       } catch (error) {
@@ -30,7 +36,7 @@ function EmailsTable() {
       }
     };
     fetchEmails();
-  }, [emails]);
+  }, [emails,token]);
 
   useEffect(() => {
     const result = emails.filter(
@@ -45,7 +51,11 @@ function EmailsTable() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/deleteEmail/${id}`);
+      await axios.delete(`http://localhost:8000/deleteEmail/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       setEmails(emails.filter((email) => email._id !== id));
       showSuccessToast("Email başarıyla silindi!");
     } catch (error) {
@@ -55,8 +65,10 @@ function EmailsTable() {
   };
 
   const handleEdit = async (email) => {
+ 
+  
     const { value: updatedEmail } = await Swal.fire({
-      title: "E-posta düzenleme",
+      title: "E-posta Düzenleme",
       input: "text",
       inputValue: email.email,
       inputAttributes: {
@@ -69,18 +81,24 @@ function EmailsTable() {
         try {
           const response = await axios.put(
             `http://localhost:8000/updateEmail/${email._id}`,
-            { email: newEmail }
+            { email: newEmail },
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`
+              }
+            }
           );
-          return response.data;
+          return response.data.email; 
         } catch (error) {
-          Swal.showValidationMessage(`
-            E-posta güncellenirken bir hata oluştu: ${error.response.data.error}
-          `);
+          Swal.showValidationMessage(
+            `E-posta güncellenirken bir hata oluştu: ${error.response && error.response.data ? error.response.data.error : "Unknown error"}`
+          );
+          return null;
         }
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
-
+  
     if (updatedEmail) {
       setEmails(
         emails.map((item) =>
@@ -90,6 +108,7 @@ function EmailsTable() {
       showSuccessToast("Email başarıyla güncellendi!");
     }
   };
+  
 
   const exportPDF = () => {
     const doc = new jsPDF();
