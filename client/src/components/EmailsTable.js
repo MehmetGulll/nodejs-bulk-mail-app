@@ -36,7 +36,7 @@ function EmailsTable() {
       }
     };
     fetchEmails();
-  }, [emails,token]);
+  }, [token, emails]);
 
   useEffect(() => {
     const result = emails.filter(

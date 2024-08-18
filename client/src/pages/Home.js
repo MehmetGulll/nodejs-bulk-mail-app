@@ -20,7 +20,9 @@ function Home() {
     const token = localStorage.getItem("token");
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/getCategories");
+        const response = await axios.get("http://localhost:8000/getCategories",{headers:{
+          'Authorization':`Bearer ${token}`
+        }});
         setCategories(response.data);
       } catch (error) {
         console.error("Kategorileri yüklerken hata oluştu:", error);
@@ -28,7 +30,7 @@ function Home() {
     };
 
     fetchCategories();
-  }, []);
+  }, [token, categories]);
   const handleSubmit = async () => {
     console.log("Selected Name:", selectedName);
     try {
@@ -97,6 +99,8 @@ function Home() {
     }
   };
   const handleAddEmail = async () => {
+    console.log("mail",newEmail);
+    console.log("kategori",newSelectedName);
     if (!newEmail.trim()) {
       Swal.fire({
         title: "Oopss!",
@@ -106,14 +110,7 @@ function Home() {
       return;
     } else {
       try {
-        if (!newEmail || !newSelectedName) {
-          Swal.fire({
-            title: "Oopss!",
-            text: "Email ve kategori adı gereklidir!",
-            icon: "error",
-          });
-          return;
-        }
+        
         const response = await axios.post(
           "http://localhost:8000/addEmail",
           {
@@ -122,7 +119,7 @@ function Home() {
           },
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              'Authorization': `Bearer ${token}`,
             },
           }
         );
