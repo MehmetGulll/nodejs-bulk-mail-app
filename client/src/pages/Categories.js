@@ -18,7 +18,7 @@ function Categories() {
       return;
     } else {
       try {
-        const response = await axios.post("http://localhost:8000/addCategory", {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/addCategory`, {
           name: newCategory,
         });
         setCategories([...categories, response.data]);

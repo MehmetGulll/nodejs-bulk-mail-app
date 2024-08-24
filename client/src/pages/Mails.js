@@ -13,7 +13,7 @@ function Mails() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/getCategories");
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCategories`);
         setCategories(response.data);
       } catch (error) {
         console.error("Kategorileri yüklerken hata oluştu:", error);
@@ -39,7 +39,7 @@ function Mails() {
           });
           return;
         }
-        const response = await axios.post("http://localhost:8000/addEmail", {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/addEmail`, {
           email: newEmail,
           name: newSelectedName,
         });

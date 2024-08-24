@@ -48,7 +48,7 @@ function Header() {
         </div>
         <div 
           onClick={handleLogout} 
-          className="rounded-lg bg-[#fdee98] transition-colors hover:bg-[#FF6F61] cursor-pointer">
+          className="rounded-lg  transition-colors hover:bg-[#FF6F61] cursor-pointer">
           <div className="whitespace-nowrap text-sm font-semibold text-[#484b52] transition-colors sm:text-base p-2 flex items-center">
             Log Out
           </div>

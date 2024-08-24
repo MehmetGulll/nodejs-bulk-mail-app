@@ -21,7 +21,7 @@ function Register() {
             console.log(email);
             console.log(password);
             console.log(confirmPassword);
-          const response = await axios.post('http://localhost:8000/register', {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`, {
             email,
             password,
             confirmPassword,

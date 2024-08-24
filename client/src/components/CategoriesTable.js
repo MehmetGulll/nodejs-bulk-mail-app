@@ -20,7 +20,7 @@ function CategoriesTable() {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/getCategories",
+          `${process.env.REACT_APP_API_URL}/getCategories`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ function CategoriesTable() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/deleteCategory/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/deleteCategory/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -72,7 +72,7 @@ function CategoriesTable() {
       preConfirm: async (newCategoryName) => {
         try {
           const response = await axios.put(
-            `http://localhost:8000/updateCategory/${category._id}`,
+            `${process.env.REACT_APP_API_URL}/updateCategory/${category._id}`,
             { name: newCategoryName },
             {
               headers: {

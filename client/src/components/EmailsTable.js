@@ -23,8 +23,9 @@ function EmailsTable() {
 
   useEffect(() => {
     const fetchEmails = async () => {
+
       try {
-        const response = await axios.get("http://localhost:8000/getEmails", {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getEmails`, {
           headers: {
             'Authorization': `Bearer ${token}`  
           }
@@ -36,7 +37,7 @@ function EmailsTable() {
       }
     };
     fetchEmails();
-  }, [token, emails]);
+  }, [token]);
 
   useEffect(() => {
     const result = emails.filter(
@@ -51,7 +52,7 @@ function EmailsTable() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/deleteEmail/${id}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/deleteEmail/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -80,7 +81,7 @@ function EmailsTable() {
       preConfirm: async (newEmail) => {
         try {
           const response = await axios.put(
-            `http://localhost:8000/updateEmail/${email._id}`,
+            `${process.env.REACT_APP_API_URL}/updateEmail/${email._id}`,
             { email: newEmail },
             {
               headers: {

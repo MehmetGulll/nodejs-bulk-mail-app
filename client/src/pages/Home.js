@@ -23,7 +23,7 @@ function Home() {
     }
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/getCategories",{headers:{
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCategories`,{headers:{
           'Authorization':`Bearer ${token}`
         }});
         setCategories(response.data);
@@ -38,7 +38,7 @@ function Home() {
     console.log("Selected Name:", selectedName);
     try {
       const response = await axios.post(
-        "http://localhost:8000/sendEmail",
+       `${process.env.REACT_APP_API_URL}/sendEmail`,
         {
           name: selectedName,
         },
@@ -74,7 +74,7 @@ function Home() {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:8000/addCategory",
+          `${process.env.REACT_APP_API_URL}/addCategory`,
           {
             name: newCategory,
           },
@@ -115,7 +115,7 @@ function Home() {
       try {
         
         const response = await axios.post(
-          "http://localhost:8000/addEmail",
+          `${process.env.REACT_APP_API_URL}/addEmail`,
           {
             email: newEmail,
             name: newSelectedName,
