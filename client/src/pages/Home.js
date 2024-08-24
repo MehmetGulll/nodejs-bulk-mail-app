@@ -18,6 +18,9 @@ function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if(categories.length > 0){
+      setNewSelectedName(categories[0].name);
+    }
     const fetchCategories = async () => {
       try {
         const response = await axios.get("http://localhost:8000/getCategories",{headers:{
@@ -54,7 +57,7 @@ function Home() {
       console.log("Error", error);
       Swal.fire({
         title: "Email Sending",
-        text: "Email sent failed" + error + "Check to your SMTP setting",
+        text: "Email sent failed, Check to your SMTP setting",
         icon: "error",
       });
     }
