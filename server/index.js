@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const emailRoutes = require("./routes/emailRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const fileRoutes = require('./routes/fileRoutes');
+require('dotenv').config();
 
 const app = express();
 const port = 8000;
@@ -24,7 +25,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "public", "build", "index.html"));
 });
 app.use(cors());
-mongoose.connect("mongodb://127.0.0.1:27017/BulkMailDB");
+mongoose.connect(process.env.MONGO_URI);
 
 mongoose.connection.on("connected", async () => {
   console.log("MongoDB bağlantısı başarılı");

@@ -20,6 +20,7 @@ function Home() {
     const token = localStorage.getItem("token");
     if(categories.length > 0){
       setNewSelectedName(categories[0].name);
+      setSelectedName(categories[0].name);
     }
     const fetchCategories = async () => {
       try {
@@ -57,7 +58,7 @@ function Home() {
       console.log("Error", error);
       Swal.fire({
         title: "Email Sending",
-        text: "Email sent failed, Check to your SMTP setting",
+        text: "Email sent failed, Check to your SMTP setting" + error.message,
         icon: "error",
       });
     }
@@ -161,15 +162,15 @@ function Home() {
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
-
+  
     try {
       const response = await axios.post(
-        "http://localhost:8000/uploadFile",
+        `${process.env.REACT_APP_API_URL}/uploadFile`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }
       );
       Swal.fire({
@@ -187,6 +188,8 @@ function Home() {
       });
     }
   };
+  
+  
   const handleSMTPClick = async () => {
     const { value: formValues } = await Swal.fire({
       title: "Enter SMTP Settings",

@@ -47,6 +47,8 @@ exports.sendEmail = asyncHandler(async (req, res) => {
     return res.status(404).send({ error: `No emails found for category ${selectedCategory}.` });
   }
 
+  const failedEmails = [];
+
   for (const emailDoc of emails) {
     const mailOptions = {
       from: defaultFromEmail, 
@@ -59,34 +61,6 @@ exports.sendEmail = asyncHandler(async (req, res) => {
               <tr>
                 <td style="text-align: center;">
                   <img src="cid:image1" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
-                </td>
-              </tr>
-              <tr>
-                <td style="text-align: center;">
-                  <table style="margin: 0 auto; width: 80%; border-spacing: 10px;">
-                    <tr>
-                      <td style="background-color: #333; text-align: center; width: 33%;">
-                        <a href="https://www.bilcom.com.tr/" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; background-color: #333; color: white;">www.bilcom.com.tr</a>
-                      </td>
-                      <td style="background-color: #333; text-align: center; width: 33%;">
-                        <a href="https://www.instagram.com/bilcomizmir/" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; background-color: #333; color: white;">bilcomizmir</a>
-                      </td>
-                      <td style="background-color: #333; text-align: center; width: 33%;">
-                        <a href="#" style="text-decoration: none; padding: 10px 20px; border-radius: 5px; background-color: #333; color: white;">+90 (0232) 446 55 76</a>
-                      </td>
-                    </tr>
-                  </table>
-               </td>
-              </tr>
-            </table>
-            <table role="presentation" style="width: 100%; background-color: #333; margin-top: 20px;">
-              <tr>
-                <td style="text-align: center; padding: 20px;">
-                  <div style="color: white;">
-                    <p>Copyright © 2024 Bilcom Bilgisayar bütün hakları saklıdır.</p>
-                    <p>Bu e-postaları alma şeklinizi değiştirmek ister misiniz?</p>
-                    <p>Tercihlerinizi güncelleyebilir veya <a href="https://bilcom.com.tr/unsubscribe.html" style="color: orange;">bu abone listesinden çıkabilirsiniz</a>.</p>
-                  </div>
                 </td>
               </tr>
             </table>
@@ -107,10 +81,16 @@ exports.sendEmail = asyncHandler(async (req, res) => {
       console.log(`Mail sent to ${emailDoc.email}`);
     } catch (error) {
       console.log(`Failed to send email to ${emailDoc.email}: `, error);
-      return res.status(500).send({
-        error: `Failed to send email to ${emailDoc.email}: ${error.message}`
-      });
+      failedEmails.push(emailDoc.email);
     }
+  }
+
+  if (failedEmails.length > 0) {
+    console.log(`Failed to send emails to the following addresses: ${failedEmails.join(', ')}`);
+    return res.status(207).send({
+      message: "Some emails failed to send.",
+      failedEmails: failedEmails
+    });
   }
 
   console.log("E-mails successfully sent");

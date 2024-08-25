@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const asyncHandler = require("../middlewares/asyncHandler");
+
 exports.getCategories = asyncHandler(async (req, res) => {
   if (!req.user) {
     return res

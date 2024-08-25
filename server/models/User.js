@@ -9,7 +9,12 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
-    }
+    },
+    files: [{
+        filename: String,
+        path: String, 
+        uploaded: { type: Date, default: Date.now }
+    }]
 })
 
 const User = mongoose.model('User',userSchema);
