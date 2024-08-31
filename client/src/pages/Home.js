@@ -6,6 +6,11 @@ import Swal from "sweetalert2";
 import Button from "../components/Button";
 import { GoGear } from "react-icons/go";
 import { useAuth } from "../Context/AuthContext";
+import {
+  ToastNotification,
+  showSuccessToast,
+  showErrorToast,
+} from "../components/ToastNotification";
 
 function Home() {
   const [selectedName, setSelectedName] = useState("");
@@ -18,25 +23,30 @@ function Home() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if(categories.length > 0){
-      setNewSelectedName(categories[0].name);
-      setSelectedName(categories[0].name);
-    }
+    
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCategories`,{headers:{
-          'Authorization':`Bearer ${token}`
-        }});
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCategories`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         setCategories(response.data);
+        if(response.data.length > 0 && !newSelectedName){
+          setNewSelectedName(response.data[0].name);
+          setSelectedName(response.data[0].name);
+        }
       } catch (error) {
         console.error("Kategorileri yüklerken hata oluştu:", error);
       }
     };
-
+  
     fetchCategories();
-  }, [token, categories]);
+  }, [token]); 
+  
   const handleSubmit = async () => {
     console.log("Selected Name:", selectedName);
+    showSuccessToast("Emails are being sent...");
     try {
       const response = await axios.post(
        `${process.env.REACT_APP_API_URL}/sendEmail`,
