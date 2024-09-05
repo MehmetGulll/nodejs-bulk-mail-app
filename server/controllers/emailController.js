@@ -35,7 +35,7 @@ exports.setupSMTP = asyncHandler(async (req, res) => {
 
 exports.sendEmail = asyncHandler(async (req, res) => {
   const selectedCategory = req.body.name;
-  console.log("Received name:", req.body.name);
+  const userMessage = req.body.message; // Textarea'dan gelen içeriği alıyoruz
 
   if (!selectedCategory) {
     return res.status(400).send({ error: "Category name is required." });
@@ -44,13 +44,12 @@ exports.sendEmail = asyncHandler(async (req, res) => {
   const emails = await Email.find({ name: selectedCategory });
 
   if (!emails.length) {
-    console.log(`No emails found for category ${selectedCategory}.`);
     return res
       .status(404)
       .send({ error: `No emails found for category ${selectedCategory}.` });
   }
 
-  const user = req.user; 
+  const user = req.user;
   if (!user || !user.files || !user.files.length) {
     return res.status(404).send({ error: "Kullanıcı dosyası bulunamadı." });
   }
@@ -73,6 +72,21 @@ exports.sendEmail = asyncHandler(async (req, res) => {
                   <img src="cid:userImage" alt="User uploaded image" style="display: block; margin: 0 auto; max-width: 100%; height: auto;">
                 </td>
               </tr>
+
+              ${
+                userMessage
+                  ? `
+              <tr>
+                <td style="text-align: center; padding: 20px;">
+                  <p style="color: #fff; text-align: center; border-top: 1px solid #fff; padding-top: 10px;">
+                    ${userMessage}
+                  </p>
+                </td>
+              </tr>
+              `
+                  : ""
+              }
+              
             </table>
           </body>
         </html>
@@ -82,9 +96,9 @@ exports.sendEmail = asyncHandler(async (req, res) => {
           filename: lastFile.filename,
           content: lastFile.data.split(",")[1],
           encoding: "base64",
-          cid: "userImage"
-        }
-      ]
+          cid: "userImage",
+        },
+      ],
     };
 
     try {
@@ -111,9 +125,6 @@ exports.sendEmail = asyncHandler(async (req, res) => {
   console.log("E-mails successfully sent");
   res.send("E-mails successfully sent");
 });
-
-
-
 
 exports.listEmails = asyncHandler(async (req, res) => {
   const userId = req.user._id;

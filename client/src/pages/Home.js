@@ -18,21 +18,25 @@ function Home() {
   const [newCategory, setNewCategory] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newSelectedName, setNewSelectedName] = useState("");
+  const [textareaContent, setTextareaContent] = useState("");
   const [file, setFile] = useState(null);
   const { token } = useAuth();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    
+
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getCategories`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/getCategories`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         setCategories(response.data);
-        if(response.data.length > 0 && !newSelectedName){
+        if (response.data.length > 0 && !newSelectedName) {
           setNewSelectedName(response.data[0].name);
           setSelectedName(response.data[0].name);
         }
@@ -40,18 +44,24 @@ function Home() {
         console.error("Kategorileri yüklerken hata oluştu:", error);
       }
     };
-  
+
     fetchCategories();
-  }, [token]); 
-  
+  }, [token]);
+
+  const handleTextareaChange = (e) => {
+    setTextareaContent(e.target.value);
+  };
+
   const handleSubmit = async () => {
     console.log("Selected Name:", selectedName);
     showSuccessToast("Emails are being sent...");
+
     try {
       const response = await axios.post(
-       `${process.env.REACT_APP_API_URL}/sendEmail`,
+        `${process.env.REACT_APP_API_URL}/sendEmail`,
         {
           name: selectedName,
+          message: textareaContent,
         },
         {
           headers: {
@@ -59,16 +69,19 @@ function Home() {
           },
         }
       );
+
       Swal.fire({
         title: "Email Sending",
-        text: "Email sent successfuly!",
+        text: "Email sent successfully!",
         icon: "success",
       });
     } catch (error) {
       console.log("Error", error);
+
       Swal.fire({
         title: "Email Sending",
-        text: "Email sent failed, Check to your SMTP setting" + error.message,
+        text:
+          "Email sending failed, Check your SMTP settings. " + error.message,
         icon: "error",
       });
     }
@@ -113,8 +126,8 @@ function Home() {
     }
   };
   const handleAddEmail = async () => {
-    console.log("mail",newEmail);
-    console.log("kategori",newSelectedName);
+    console.log("mail", newEmail);
+    console.log("kategori", newSelectedName);
     if (!newEmail.trim()) {
       Swal.fire({
         title: "Oopss!",
@@ -124,7 +137,6 @@ function Home() {
       return;
     } else {
       try {
-        
         const response = await axios.post(
           `${process.env.REACT_APP_API_URL}/addEmail`,
           {
@@ -133,7 +145,7 @@ function Home() {
           },
           {
             headers: {
-              'Authorization': `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -172,15 +184,15 @@ function Home() {
   const uploadFile = async (file) => {
     const formData = new FormData();
     formData.append("image", file);
-  
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/uploadFile`,
         formData,
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
       );
       Swal.fire({
@@ -198,8 +210,7 @@ function Home() {
       });
     }
   };
-  
-  
+
   const handleSMTPClick = async () => {
     const { value: formValues } = await Swal.fire({
       title: "Enter SMTP Settings",
@@ -227,10 +238,11 @@ function Home() {
       try {
         const response = await axios.post(
           "http://localhost:8000/setupSmtp",
-          formValues,{
-            headers:{
-              'Authorization':`Bearer ${token}`
-            }
+          formValues,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         Swal.fire({
@@ -267,7 +279,13 @@ function Home() {
                 onChange={handleFileChange}
                 className=" rounded-md  mt-2"
               />
-              <textarea rows={4} cols={40} className="border-2 mt-2 rounded-md p-2"/>
+              <textarea
+                rows={4}
+                cols={40}
+                className="border-2 mt-2 rounded-md p-2"
+                value={textareaContent}
+                onChange={handleTextareaChange}
+              />
             </div>
             <div>
               <FormSection
