@@ -267,6 +267,7 @@ function Home() {
                 onChange={handleFileChange}
                 className=" rounded-md  mt-2"
               />
+              <textarea rows={4} cols={40} className="border-2 mt-2 rounded-md p-2"/>
             </div>
             <div>
               <FormSection
