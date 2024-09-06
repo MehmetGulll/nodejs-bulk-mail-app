@@ -271,7 +271,7 @@ function Home() {
             <GoGear fontWeight={"600"} fontSize={20} />
             <div className="font-semibold">SMTP Settings</div>
           </div>
-          <div className="flex flex-row justify-around p-1">
+          <div className="flex flex-col gap-5 2xl:flex-row justify-around p-1">
             <div className="flex flex-col">
               <label>Dosya Yükle</label>
               <input
@@ -279,13 +279,16 @@ function Home() {
                 onChange={handleFileChange}
                 className=" rounded-md  mt-2"
               />
-              <textarea
-                rows={4}
-                cols={40}
-                className="border-2 mt-2 rounded-md p-2"
-                value={textareaContent}
-                onChange={handleTextareaChange}
-              />
+              <div className="flex flex-col mt-5">
+                <div>Mail içeriğini giriniz.</div>
+                <textarea
+                  rows={4}
+                  cols={40}
+                  className="border-2 mt-2 rounded-md p-2"
+                  value={textareaContent}
+                  onChange={handleTextareaChange}
+                />
+              </div>
             </div>
             <div>
               <FormSection

@@ -17,7 +17,7 @@ function AppContent() {
   const location = useLocation();
 
   return (
-    <div className="flex flex-col bg-layoutBackground max-w-6xl mx-auto w-full">
+    <div className="flex flex-col bg-layoutBackground mx-auto w-full sm:max-w-6xl">
       {location.pathname !== "/" && location.pathname !== "/register" && (
         <div className="mt-7">
           <Header />

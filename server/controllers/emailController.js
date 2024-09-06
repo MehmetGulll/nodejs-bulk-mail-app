@@ -35,7 +35,7 @@ exports.setupSMTP = asyncHandler(async (req, res) => {
 
 exports.sendEmail = asyncHandler(async (req, res) => {
   const selectedCategory = req.body.name;
-  const userMessage = req.body.message; // Textarea'dan gelen içeriği alıyoruz
+  const userMessage = req.body.message; 
 
   if (!selectedCategory) {
     return res.status(400).send({ error: "Category name is required." });

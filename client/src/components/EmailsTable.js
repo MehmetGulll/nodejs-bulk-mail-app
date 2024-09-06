@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import Button from "./Button";
 import {
   ToastNotification,
   showSuccessToast,
   showErrorToast,
-} from "./ToastNotification"; 
+} from "./ToastNotification";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable"; 
+import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { useAuth } from "../Context/AuthContext";
 
@@ -23,13 +23,15 @@ function EmailsTable() {
 
   useEffect(() => {
     const fetchEmails = async () => {
-
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/getEmails`, {
-          headers: {
-            'Authorization': `Bearer ${token}`  
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/getEmails`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        });
+        );
         setEmails(response.data);
         console.log(response.data);
       } catch (error) {
@@ -54,8 +56,8 @@ function EmailsTable() {
     try {
       await axios.delete(`${process.env.REACT_APP_API_URL}/deleteEmail/${id}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
       setEmails(emails.filter((email) => email._id !== id));
       showSuccessToast("Email başarıyla silindi!");
@@ -66,8 +68,6 @@ function EmailsTable() {
   };
 
   const handleEdit = async (email) => {
- 
-  
     const { value: updatedEmail } = await Swal.fire({
       title: "E-posta Düzenleme",
       input: "text",
@@ -85,21 +85,25 @@ function EmailsTable() {
             { email: newEmail },
             {
               headers: {
-                'Authorization': `Bearer ${token}`
-              }
+                Authorization: `Bearer ${token}`,
+              },
             }
           );
-          return response.data.email; 
+          return response.data.email;
         } catch (error) {
           Swal.showValidationMessage(
-            `E-posta güncellenirken bir hata oluştu: ${error.response && error.response.data ? error.response.data.error : "Unknown error"}`
+            `E-posta güncellenirken bir hata oluştu: ${
+              error.response && error.response.data
+                ? error.response.data.error
+                : "Unknown error"
+            }`
           );
           return null;
         }
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
-  
+
     if (updatedEmail) {
       setEmails(
         emails.map((item) =>
@@ -109,11 +113,10 @@ function EmailsTable() {
       showSuccessToast("Email başarıyla güncellendi!");
     }
   };
-  
 
   const exportPDF = () => {
     const doc = new jsPDF();
-    autoTable(doc, { 
+    autoTable(doc, {
       head: [["Email", "Birim"]],
       body: filteredEmails.map((email) => [email.email, email.name]),
     });
@@ -134,7 +137,7 @@ function EmailsTable() {
 
   return (
     <div className="mt-5">
-       <div className="flex justify-end space-x-2 mb-4">
+      <div className="flex justify-end space-x-2 mb-4">
         <div className="w-32">
           <Button onClick={exportPDF} text="PDF İndir" />
         </div>
@@ -142,7 +145,7 @@ function EmailsTable() {
           <Button onClick={exportExcel} text="Excel İndir" />
         </div>
       </div>
-      <div className="flex justify-between p-3">
+      <div className="flex flex-col gap-3 2xl:flex-row 2xl:justify-between p-3">
         <input
           type="text"
           placeholder="E mail Ara"
@@ -162,37 +165,40 @@ function EmailsTable() {
           ))}
         </select>
       </div>
-      <table className="table-auto w-full">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="px-4 py-2">Email</th>
-            <th className="px-4 py-2">Birim</th>
-            <th className="px-4 py-2">Aksiyonlar</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredEmails.map((email, index) => (
-            <tr key={index} className="bg-white">
-              <td className="border px-4 py-2">{email.email}</td>
-              <td className="border px-4 py-2">{email.name}</td>
-              <td className="border px-4 py-2 text-center">
-                <button
-                  className="text-blue-500 hover:text-blue-700"
-                  onClick={() => handleEdit(email)}
-                >
-                  <FiEdit2 />
-                </button>
-                <button
-                  onClick={() => handleDelete(email._id)}
-                  className="text-[#FF6F61] hover:text-red-500 ml-5"
-                >
-                  <FaTrash />
-                </button>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="px-4 py-2">Email</th>
+              <th className="px-4 py-2">Birim</th>
+              <th className="px-4 py-2">Aksiyonlar</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredEmails.map((email, index) => (
+              <tr key={index} className="bg-white">
+                <td className="border px-4 py-2">{email.email}</td>
+                <td className="border px-4 py-2">{email.name}</td>
+                <td className="border px-4 py-2 text-center">
+                  <button
+                    className="text-blue-500 hover:text-blue-700"
+                    onClick={() => handleEdit(email)}
+                  >
+                    <FiEdit2 />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(email._id)}
+                    className="text-[#FF6F61] hover:text-red-500 ml-5"
+                  >
+                    <FaTrash />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <ToastNotification />
     </div>
   );
