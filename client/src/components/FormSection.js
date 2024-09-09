@@ -16,7 +16,7 @@ function FormSection({
       <div>{title}</div>
       <div className="mt-2">
         {type === 'select' ? (
-          <select className="border-2 border-borderColor rounded-md px-5 w-full" value={value} onChange={onChange}>
+          <select className="border-2 border-borderColor rounded-md px-5 w-full max-w-full" value={value} onChange={onChange}>
             {options.map(option => (
               <option key={option._id} value={option.name}>{option.name}</option>
             ))}

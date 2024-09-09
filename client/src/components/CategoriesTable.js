@@ -12,6 +12,7 @@ import { useAuth } from "../Context/AuthContext";
 
 function CategoriesTable() {
   const [categories, setCategories] = useState([]);
+  const [newCategory, setNewCategory] = useState("");
   const [filteredCategories, setFilteredCategories] = useState([]);
   const [filterText, setFilterText] = useState("");
   const { token } = useAuth();
@@ -34,7 +35,7 @@ function CategoriesTable() {
       }
     };
     fetchCategories();
-  }, [token]);
+  }, [token, categories]);
 
   useEffect(() => {
     const result = categories.filter((category) =>
@@ -55,6 +56,45 @@ function CategoriesTable() {
     } catch (error) {
       console.log("Error deleting category", error);
       showErrorToast("Kategori silinirken bir hata oluştu.");
+    }
+  };
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) {
+      Swal.fire({
+        title: "Oopss!",
+        text: "Kategori kısmı boş olamaz!",
+        icon: "error",
+      });
+      return;
+    } else {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_API_URL}/addCategory`,
+          {
+            name: newCategory,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        setCategories([...categories, response.data]);
+        setNewCategory("");
+        Swal.fire({
+          title: "Birim Ekleme",
+          text: "Birim Başarıyla Eklendi!",
+          icon: "success",
+        });
+      } catch (error) {
+        console.log("Error", error);
+        Swal.fire({
+          title: "Oopss!",
+          text: "Birim eklerken bir hata oluştu!",
+          icon: "error",
+        });
+      }
     }
   };
 
