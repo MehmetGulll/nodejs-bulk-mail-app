@@ -26,15 +26,15 @@ require('dotenv').config();
   mongoose.connect(process.env.MONGO_URI);
 
   mongoose.connection.on("connected", async () => {
-    console.log(chalk.green("MongoDB bağlantısı başarılı"));
+    console.log(chalk.green("MongoDB bağlantısı başarılı ✅"));
   });
 
   mongoose.connection.on("error", (err) => {
-    console.log(chalk.red("MongoDB bağlantı hatası:", err));
+    console.log(chalk.red("MongoDB bağlantı hatası:", err, '❌'));
   });
 
 
   app.listen(port, () => {
-    console.log(chalk.blue(`Server running at http://localhost:${port}`));
+    console.log(chalk.blue(`Server running at http://localhost:${port} 🚀`));
   });
 })();
