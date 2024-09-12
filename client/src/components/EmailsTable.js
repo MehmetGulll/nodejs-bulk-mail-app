@@ -16,8 +16,6 @@ import { useAuth } from "../Context/AuthContext";
 
 function EmailsTable() {
   const [emails, setEmails] = useState([]);
-  const [newEmail, setNewEmail] = useState("");
-  const [newSelectedName, setNewSelectedName] = useState("");
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [filterText, setFilterText] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -51,45 +49,7 @@ function EmailsTable() {
     );
     setFilteredEmails(result);
   }, [filterText, filterCategory, emails]);
-  const handleAddEmail = async () => {
-    if (!newEmail.trim()) {
-      Swal.fire({
-        title: "Oopss!",
-        text: "Email kısmı boş kalamaz!",
-        icon: "error",
-      });
-      return;
-    } else {
-      try {
-        if (!newEmail || !newSelectedName) {
-          Swal.fire({
-            title: "Oopss!",
-            text: "Email ve kategori adı gereklidir!",
-            icon: "error",
-          });
-          return;
-        }
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/addEmail`, {
-          email: newEmail,
-          name: newSelectedName,
-        });
-        Swal.fire({
-          title: "Email Ekleme",
-          text: "Email Başarıyla Eklendi!",
-          icon: "success",
-        });
-        setNewEmail("");
-        setNewSelectedName("");
-      } catch (error) {
-        console.error("Email eklerken hata oluştu:", error);
-        Swal.fire({
-          title: "Oopss!",
-          text: "Email eklenirken bir hata oluştu!",
-          icon: "error",
-        });
-      }
-    }
-  };
+ 
 
   const categories = [...new Set(emails.map((email) => email.name))];
 
