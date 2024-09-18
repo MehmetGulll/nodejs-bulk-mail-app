@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import BulkMailLogo from "../assets/bulkMailLogo.jpg";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { EmailContext } from "../Context/EmailContext";
 
 function Header() {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const {setEmails} = useContext(EmailContext);
 
   const toggleMenu = () => {
     setMenuIsOpen(!menuIsOpen);
@@ -17,6 +19,7 @@ function Header() {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    setEmails([]);
     navigate("/");
   };
 

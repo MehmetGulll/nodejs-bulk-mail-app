@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import BulkMailLogo from "../assets/bulkMailLogo.png";
+import BulkMailLogo from "../assets/bulkMailLogo.jpg";
 import axios from 'axios'
 import Swal from 'sweetalert2';
 

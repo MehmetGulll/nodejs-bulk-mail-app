@@ -25,6 +25,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
 });
 
 exports.sendLoginResponse = asyncHandler((req, res) => {
+  const token = jwt.sign({id:req.user.id}, secretKey, {expiresIn:'1h'});
   res.status(200).send({
     message: "Logged in successfully",
     token: req.user.token,

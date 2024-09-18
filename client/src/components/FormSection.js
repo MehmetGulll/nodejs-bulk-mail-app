@@ -7,8 +7,6 @@ function FormSection({
   onChange,
   options,
   type = "text",
-  buttonAction,
-  buttonText,
   infoText = "" 
 }) {
   return (

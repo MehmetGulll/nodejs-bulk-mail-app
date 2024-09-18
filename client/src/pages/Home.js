@@ -6,11 +6,7 @@ import Swal from "sweetalert2";
 import Button from "../components/Button";
 import { GoGear } from "react-icons/go";
 import { useAuth } from "../Context/AuthContext";
-import {
-  ToastNotification,
-  showSuccessToast,
-  showErrorToast,
-} from "../components/ToastNotification";
+import { showSuccessToast } from "../components/ToastNotification";
 
 function Home() {
   const [selectedName, setSelectedName] = useState("");

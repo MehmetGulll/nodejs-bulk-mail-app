@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
@@ -13,16 +13,19 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { useAuth } from "../Context/AuthContext";
+import { EmailContext } from "../Context/EmailContext";
 
 function EmailsTable() {
-  const [emails, setEmails] = useState([]);
+
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [filterText, setFilterText] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const { token } = useAuth();
+  const {emails, setEmails} = useContext(EmailContext);
 
   useEffect(() => {
     const fetchEmails = async () => {
+      if(!token) return;
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/getEmails`,

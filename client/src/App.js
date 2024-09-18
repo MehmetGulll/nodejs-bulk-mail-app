@@ -12,6 +12,7 @@ import Mails from "./pages/Mails";
 import Categories from "./pages/Categories";
 import Header from "./components/Header";
 import { AuthProvider } from "./Context/AuthContext";
+import { EmailProvider } from "./Context/EmailContext";
 
 function AppContent() {
   const location = useLocation();
@@ -37,9 +38,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <EmailProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </EmailProvider>
     </AuthProvider>
   );
 }
