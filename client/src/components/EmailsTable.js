@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { FaTrash } from "react-icons/fa";
 import { FiEdit2 } from "react-icons/fi";
@@ -16,16 +16,15 @@ import { useAuth } from "../Context/AuthContext";
 import { EmailContext } from "../Context/EmailContext";
 
 function EmailsTable() {
-
   const [filteredEmails, setFilteredEmails] = useState([]);
   const [filterText, setFilterText] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
   const { token } = useAuth();
-  const {emails, setEmails} = useContext(EmailContext);
+  const { emails, setEmails } = useContext(EmailContext);
 
   useEffect(() => {
     const fetchEmails = async () => {
-      if(!token) return;
+      if (!token) return;
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/getEmails`,
@@ -52,7 +51,6 @@ function EmailsTable() {
     );
     setFilteredEmails(result);
   }, [filterText, filterCategory, emails]);
- 
 
   const categories = [...new Set(emails.map((email) => email.name))];
 
@@ -149,6 +147,7 @@ function EmailsTable() {
           <Button onClick={exportExcel} text="Excel İndir" />
         </div>
       </div>
+
       <div className="flex flex-col gap-3 2xl:flex-row 2xl:justify-between p-3">
         <input
           type="text"
@@ -169,38 +168,45 @@ function EmailsTable() {
           ))}
         </select>
       </div>
+
       <div className="overflow-x-auto">
-        <table className="table-auto w-full">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Birim</th>
-              <th className="px-4 py-2">Aksiyonlar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredEmails.map((email, index) => (
-              <tr key={index} className="bg-white">
-                <td className="border px-4 py-2">{email.email}</td>
-                <td className="border px-4 py-2">{email.name}</td>
-                <td className="border px-4 py-2 text-center">
-                  <button
-                    className="text-blue-500 hover:text-blue-700"
-                    onClick={() => handleEdit(email)}
-                  >
-                    <FiEdit2 />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(email._id)}
-                    className="text-[#FF6F61] hover:text-red-500 ml-5"
-                  >
-                    <FaTrash />
-                  </button>
-                </td>
+        {filteredEmails.length > 0 ? (
+          <table className="table-auto w-full">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="px-4 py-2">Email</th>
+                <th className="px-4 py-2">Birim</th>
+                <th className="px-4 py-2">Aksiyonlar</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredEmails.map((email, index) => (
+                <tr key={index} className="bg-white">
+                  <td className="border px-4 py-2">{email.email}</td>
+                  <td className="border px-4 py-2">{email.name}</td>
+                  <td className="border px-4 py-2 text-center">
+                    <button
+                      className="text-blue-500 hover:text-blue-700"
+                      onClick={() => handleEdit(email)}
+                    >
+                      <FiEdit2 />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(email._id)}
+                      className="text-[#FF6F61] hover:text-red-500 ml-5"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-center text-gray-500">
+            Herhangi bir email adresi yok.
+          </p>
+        )}
       </div>
 
       <ToastNotification />
