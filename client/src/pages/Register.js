@@ -3,55 +3,70 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import BulkMailLogo from "../assets/bulkMailLogo.jpg";
-import axios from 'axios'
-import Swal from 'sweetalert2';
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function Register() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
-    const navigate = useNavigate();
-    const handleRegisterClick = async () => {
-        setError(null);
-        setSuccess(null);
-    
-        try {
-            console.log(email);
-            console.log(password);
-            console.log(confirmPassword);
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/register`, {
-            email,
-            password,
-            confirmPassword,
-          });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
+  const handleRegisterClick = async () => {
+    setError(null);
+    setSuccess(null);
 
-         
-          Swal.fire({
-            title: 'Registration Successful!',
-            text: response.data.message,
-            icon: 'success',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            navigate('/'); 
-          });
+    // Şifre uzunluğu kontrolü
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      Swal.fire({
+        title: "Registration Failed",
+        text: "Password must be at least 8 characters long.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return; // İşlemi durdur
+    }
 
-          setSuccess(response.data.message);
-          setEmail('');
-          setPassword('');
-          setConfirmPassword('');
-        } catch (error) {
-          setError(error.response.data.error);
-          Swal.fire({
-            title: 'Registration Failed',
-            text: error.response.data.error,
-            icon: 'error',
-            confirmButtonText: 'OK'
-          });
+    try {
+      console.log(email);
+      console.log(password);
+      console.log(confirmPassword);
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/register`,
+        {
+          email,
+          password,
+          confirmPassword,
         }
-      };
-    
+      );
+
+      Swal.fire({
+        title: "Registration Successful!",
+        text: response.data.message,
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/");
+      });
+
+      setSuccess(response.data.message);
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      setError(error.response.data.error);
+      Swal.fire({
+        title: "Registration Failed",
+        text: error.response.data.error,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5 items-center justify-center mt-5 p-5">
       <div>
