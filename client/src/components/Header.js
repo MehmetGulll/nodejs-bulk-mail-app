@@ -71,7 +71,7 @@ function Header() {
             }}
             className="text-lg p-2 my-2 bg-red-500 text-white rounded-md"
           >
-            Log Out
+            Çıkış
           </button>
         </div>
       </div>
@@ -112,7 +112,7 @@ function Header() {
           className="rounded-lg  transition-colors hover:bg-[#FF6F61] cursor-pointer"
         >
           <div className="whitespace-nowrap text-sm font-semibold text-[#484b52] transition-colors sm:text-base p-2 flex items-center">
-            Log Out
+            Çıkış
           </div>
         </div>
       </div>

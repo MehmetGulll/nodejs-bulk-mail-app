@@ -42,7 +42,7 @@ function Home() {
     };
 
     fetchCategories();
-  }, [token]);
+  }, [token ,categories]);
 
   const handleTextareaChange = (e) => {
     setTextareaContent(e.target.value);
@@ -265,7 +265,7 @@ function Home() {
             onClick={handleSMTPClick}
           >
             <GoGear fontWeight={"600"} fontSize={20} />
-            <div className="font-semibold">SMTP Settings</div>
+            <div className="font-semibold">SMTP Ayarları</div>
           </div>
           <div className="flex flex-col gap-5 2xl:flex-row justify-around p-1">
             <div className="flex flex-col">
